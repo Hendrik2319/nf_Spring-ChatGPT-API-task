@@ -12,16 +12,4 @@ public class FoodMenuAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(FoodMenuAppApplication.class, args);
     }
-
-    @Value("${app.openai-api-key}")
-    private String openaiApiKey;
-
-    @Bean
-    public WebClient webClient() {
-        return WebClient.builder()
-                .baseUrl("https://api.openai.com/v1/chat/completions")
-                .defaultHeader("Authorization", "Bearer " + openaiApiKey)
-                .build();
-    }
-
 }

@@ -21,16 +21,16 @@ public class FoodController {
     }
 
     @PutMapping("/{id}")
-    public Food createFood(@PathVariable String id, @RequestBody Food food) {
+    public Food updateFood(@PathVariable String id, @RequestBody Food food) {
         if (!id.equals(food.id())) {
             throw new IllegalArgumentException("id does not match");
         }
-        return foodService.createFood(food);
+        return foodService.updateFood(food);
     }
 
     @PostMapping
-    public Food updateFood(@RequestBody Food food) {
-        return foodService.updateFood(food);
+    public Food createFood(@RequestBody Food food) {
+        return foodService.createFood(food);
     }
 
     @DeleteMapping("/{id}")
