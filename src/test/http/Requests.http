@@ -1,0 +1,8 @@
+PUT http://localhost:8080/foods/123
+Content-Type: application/json
+
+{
+  "id": "123",
+  "name": "Pizza",
+  "category": "italian"
+}
