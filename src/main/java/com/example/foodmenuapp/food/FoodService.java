@@ -56,7 +56,11 @@ public class FoodService {
             return null;
 
         //String prompt = "Give me a category name for %s".formatted(food.name());
-        String prompt = "categories: [vegan, vegetarisch, Hausmannskost, Asiatisch, Nudel, Fisch, Spanisch, Deutsch, Mediterran]; output: best fitting category as string; outputformat: ${category}; input: "+food.name();
+        String prompt =
+                "categories: [vegan, vegetarisch, Hausmannskost, Asiatisch, Nudel, Fisch, Spanisch, Deutsch, Mediterran];" +
+                " output: best fitting category as string;" +
+                " outputformat: ${category};" +
+                " input: "+food.name();
 
         ChatGPTRequest request = new ChatGPTRequest(
                 "gpt-3.5-turbo",
@@ -69,7 +73,23 @@ public class FoodService {
         );
 
         System.out.printf("request : %s%n", request);
+        ChatGPTResponse response = execFRequest(request);
+        System.out.printf("response: %s%n", response);
+        if (response==null) return null;
 
+        List<ChatGPTResponse.MessageContainer> choices = response.choices();
+        if (choices==null || choices.isEmpty()) return null;
+
+        ChatGPTResponse.MessageContainer messageContainer = choices.get(0);
+        if (messageContainer==null) return null;
+
+        ChatGPTResponse.Message message = messageContainer.message();
+        if (message==null) return null;
+
+        return message.content();
+    }
+
+    private ChatGPTResponse execFRequest(ChatGPTRequest request) {
         ResponseEntity<ChatGPTResponse> responseEntity = webClient.post()
                 .bodyValue(request)
                 .retrieve()
@@ -84,9 +104,6 @@ public class FoodService {
         if (statusCode.is4xxClientError()) return null;
         if (statusCode.is5xxServerError()) return null;
 
-        ChatGPTResponse response = responseEntity.getBody();
-        System.out.printf("response: %s%n", response);
-
-        return response.choices().get(0).message().content();
+        return responseEntity.getBody();
     }
 }
