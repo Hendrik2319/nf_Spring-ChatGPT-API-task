@@ -3,9 +3,14 @@ package com.example.foodmenuapp.chatgpt;
 import java.util.List;
 
 public record ChatGPTResponse (
-        List<ChatGPTResponseMessage> choices
+        List<MessageContainer> choices
 ) {
-    public record ChatGPTResponseMessage (
+    public record MessageContainer(
+            int index,
+            Message message,
+            String finish_reason
+    ) {}
+    public record Message(
             String role,
             String content
     ) {}

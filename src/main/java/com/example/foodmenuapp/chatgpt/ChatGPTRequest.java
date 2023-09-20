@@ -4,14 +4,10 @@ import java.util.List;
 
 public record ChatGPTRequest (
         String model,
-        List<ChatGPTRequestMessage> messages
+        List<Message> messages
 ) {
-    public record ChatGPTRequestMessage (
+    public record Message(
             String role,
             String content
-    ) {
-        public ChatGPTRequestMessage(String content) {
-            this( "user", content );
-        }
-    }
+    ) {}
 }
