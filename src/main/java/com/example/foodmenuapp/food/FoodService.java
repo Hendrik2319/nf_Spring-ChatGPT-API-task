@@ -62,6 +62,10 @@ public class FoodService {
                 " outputformat: ${category};" +
                 " input: "+food.name();
 
+        return askChatGPT(prompt);
+    }
+
+    private String askChatGPT(String prompt) {
         ChatGPTRequest request = new ChatGPTRequest(
                 "gpt-3.5-turbo",
                 List.of(
@@ -72,18 +76,23 @@ public class FoodService {
                 )
         );
 
-        System.out.printf("request : %s%n", request);
-        ChatGPTResponse response = execFRequest(request);
-        System.out.printf("response: %s%n", response);
-        if (response==null) return null;
+        request.showContent(System.out, "request");
 
-        List<ChatGPTResponse.MessageContainer> choices = response.choices();
+        ChatGPTResponse response = execFRequest(request);
+        if (response==null) {
+            System.out.println("response: <null>");
+            return null;
+        }
+
+        response.showContent(System.out, "response");
+
+        List<ChatGPTResponse.Choice> choices = response.choices();
         if (choices==null || choices.isEmpty()) return null;
 
-        ChatGPTResponse.MessageContainer messageContainer = choices.get(0);
-        if (messageContainer==null) return null;
+        ChatGPTResponse.Choice firstChoice = choices.get(0);
+        if (firstChoice==null) return null;
 
-        ChatGPTResponse.Message message = messageContainer.message();
+        ChatGPTResponse.Message message = firstChoice.message();
         if (message==null) return null;
 
         return message.content();
